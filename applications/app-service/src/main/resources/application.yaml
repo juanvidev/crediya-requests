@@ -11,6 +11,14 @@ spring:
       path: "/h2"
   profiles:
     include: null
+adapters:
+  r2dbc:
+    host: "localhost"
+    port: 49153
+    database: "postgres"
+    schema: "public"
+    username: "postgres"
+    password: "postgrespw"
 management:
   endpoints:
     web:
@@ -22,3 +30,9 @@ management:
         enabled: true
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-doc
