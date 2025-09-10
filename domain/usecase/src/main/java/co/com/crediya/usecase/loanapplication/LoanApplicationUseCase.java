@@ -1,5 +1,6 @@
 package co.com.crediya.usecase.loanapplication;
 
+import co.com.crediya.model.ClientRepository;
 import co.com.crediya.model.loanapplication.LoanApplication;
 import co.com.crediya.model.loanapplication.gateways.LoanApplicationRepository;
 import co.com.crediya.model.loantype.gateways.LoanTypeRepository;
@@ -13,9 +14,21 @@ public class LoanApplicationUseCase {
     private final LoanApplicationRepository loanApplicationRepository;
     private final LoanTypeRepository loanTypeRepository;
     private final StatusRepository statusRepository;
+    private final ClientRepository clientRepository;
 
     public Mono<LoanApplication> save(LoanApplication loanApplication, String loanTypeName) {
-        return loanTypeRepository.findByName(loanTypeName)
+
+        return clientRepository.existsByEmailAndDocument(
+                        loanApplication.getEmail(),
+                        loanApplication.getDocumentId())
+                .flatMap(exists -> {
+                    if (!exists) {
+                        return Mono
+                                .error(new BusinessException("BSS_03", "No client found with the provided email and document."));
+                    }
+                    return Mono.just(loanApplication);
+                })
+                .flatMap(loan -> loanTypeRepository.findByName(loanTypeName))
                 .switchIfEmpty(Mono.error(new BusinessException("BSS_01", "Loan type not found")))
                 .zipWith(statusRepository.findByName("PENDING"))
                 .switchIfEmpty(Mono.error(new BusinessException("BSS_02", "Status not found")))

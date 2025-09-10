@@ -1,5 +1,7 @@
 package co.com.crediya.usecase;
 
+import co.com.crediya.model.ClientRepository;
+import co.com.crediya.model.exception.BusinessException;
 import co.com.crediya.model.loanapplication.LoanApplication;
 import co.com.crediya.model.loanapplication.gateways.LoanApplicationRepository;
 import co.com.crediya.model.loantype.LoanType;
@@ -22,6 +24,7 @@ import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,58 +37,83 @@ class LoanApplicationUseCaseTest {
     @Mock
     private StatusRepository statusRepositoryMock;
     @Mock
+    private ClientRepository clientRepository;
+
     private LoanApplicationUseCase loanApplicationUseCaseMock;
     private LoanApplication loanApplyToTest;
+    private String loanTypeName;
+    private LoanType loanType;
+    private Status status;
+
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        loanApplicationUseCaseMock = new LoanApplicationUseCase(loanApplicationRepository, loanTypeRepositoryMock, statusRepositoryMock);
+        
+        loanApplicationUseCaseMock = new LoanApplicationUseCase(loanApplicationRepository, loanTypeRepositoryMock, statusRepositoryMock, clientRepository);
+
+        loanTypeName = "Basic";
+
         loanApplyToTest = LoanApplication.builder()
+                .id(1)
                 .amount(new BigDecimal("2500.22"))
                 .term(LocalDate.of(2025, 8, 25))
                 .email("test@test.com")
                 .typeLoanId(1)
                 .build();
+
+        loanType = LoanType.builder()
+                .id(1)
+                .name(loanTypeName)
+                .maxAmount(new BigDecimal("5000.00"))
+                .minAmount(new BigDecimal("1000.00"))
+                .build();
+
+        status = Status.builder()
+                .id(1)
+                .name("PENDING")
+                .description("Loan application is pending review")
+                .build();
+
     }
 
-//
-//    @Test
-//    @DisplayName("Should create user successfully when email does not exist")
-//    void CreateLoanApplicationSuccesfully() {
-//        when(loanTypeRepositoryMock.findByName("Basic")).thenReturn(Mono.just(new LoanType()));
-//        when(statusRepositoryMock.findByName("PENDING")).thenReturn(Mono.just(new Status()));
-//        when(loanApplicationRepository.save(any(LoanApplication.class))).thenReturn(Mono.just(loanApplyToTest));
-//
-//        StepVerifier.create(loanApplicationUseCaseMock.save(loanApplyToTest, anyString()))
-//                .expectNext(loanApplyToTest)
-//                .verifyComplete();
-//
-//    }
-//
-//    @Test
-//    @DisplayName("Should fail to create user when already exists")
-//    void FailCreateLoanApplicationWhenExists() {
-//
-//        when(loanApplicationRepository.save(loanApplyToTest))
-//                .thenReturn(Mono.just(loanApplyToTest));
-//
-//        StepVerifier.create(loanApplicationUseCaseMock.save(loanApplyToTest, anyString()))
-//                .expectErrorMessage("USER_ALREADY_EXISTS")
-//                .verify();
-//    }
-//
-//    @Test
-//    @DisplayName("Should fail to create user when repository fails")
-//    void FailCreateLoanApplicationWhenRepositoryFails() {
-//
-//        when(loanApplicationRepository.save(loanApplyToTest))
-//                .thenReturn(Mono.just(loanApplyToTest));
-//
-//        StepVerifier.create(loanApplicationUseCaseMock.save(loanApplyToTest, anyString()))
-//                .expectErrorMessage("Database connection error")
-//                .verify();
-//    }
+
+    @Test
+    @DisplayName("Should create loan application successfully when data is valid")
+    void CreateLoanApplicationSuccesfully() {
+        when(loanTypeRepositoryMock.findByName("Basic")).thenReturn(Mono.just(loanType));
+        when(statusRepositoryMock.findByName("PENDING")).thenReturn(Mono.just(status));
+        when(loanApplicationRepository.save(any(LoanApplication.class))).thenReturn(Mono.just(loanApplyToTest));
+
+        StepVerifier.create(loanApplicationUseCaseMock.save(loanApplyToTest, loanTypeName))
+                .expectNextMatches(loanApply ->
+                        loanApply.getId() != null &&
+                                loanApply.getAmount().equals(loanApplyToTest.getAmount()) &&
+                                loanApply.getEmail().equals(loanApplyToTest.getEmail())
+                )
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Should throw StatusNotFoundException when status not found")
+    void testStatusNotFound() {
+        when(loanTypeRepositoryMock.findByName("Basic")).thenReturn(Mono.just(new LoanType()));
+        when(statusRepositoryMock.findByName("PENDING")).thenReturn(Mono.error(new BusinessException("BSS_02", "Status not found")));
+
+        StepVerifier.create(loanApplicationUseCaseMock.save(loanApplyToTest, loanTypeName))
+                .expectError(BusinessException.class)
+                .verify();
+    }
+
+    @Test
+    @DisplayName("Should throw LoanTypeNotFoundException when loan type does not exist")
+    void testLoanTypeNotFound() {
+        when(loanTypeRepositoryMock.findByName("InvalidType")).thenReturn(Mono.error(new BusinessException("BSS_01", "Loan type not found")));
+        when(statusRepositoryMock.findByName("PENDING")).thenReturn(Mono.just(status));
+
+        StepVerifier.create(loanApplicationUseCaseMock.save(loanApplyToTest, "InvalidType"))
+                .expectError(BusinessException.class)
+                .verify();
+    }
 
 
 

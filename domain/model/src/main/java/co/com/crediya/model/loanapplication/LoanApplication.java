@@ -15,6 +15,7 @@ public class LoanApplication {
     private BigDecimal amount;
     private LocalDate term;
     private String email;
+    private String documentId;
 
     private Integer stateId;
     private Integer typeLoanId;
