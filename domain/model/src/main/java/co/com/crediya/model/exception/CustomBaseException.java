@@ -8,26 +8,27 @@ import java.util.List;
 @Getter
 public class CustomBaseException extends RuntimeException {
     private int statusCode;
+    private Boolean success = false;
     private String message;
-    private String errorCode;
     private LocalDateTime timestamp;
+    private String errorCode;
     private List<String> errors;
 
-    public CustomBaseException(String errorCode, String message,  int statusCode, List<String> errors) {
+    public CustomBaseException(int statusCode, String message, String errorCode, List<String> errors) {
         super(message);
-        this.errorCode = errorCode;
         this.statusCode = statusCode;
         this.message = message;
         this.timestamp = LocalDateTime.now();
+        this.errorCode = errorCode;
         this.errors = errors;
     }
 
-    public CustomBaseException(String errorCode, String message, int statusCode) {
+    public CustomBaseException(int statusCode, String message, String errorCode) {
         super(message);
         this.statusCode = statusCode;
         this.message = message;
-        this.errorCode = errorCode;
         this.timestamp = LocalDateTime.now();
+        this.errorCode = errorCode;
     }
 }
 

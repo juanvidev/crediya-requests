@@ -11,10 +11,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class ObjectResponse {
+public class ObjectResponse<T> {
 
     private String code;
     private String message;
-    private Boolean data;
+    private T data;
 
 }

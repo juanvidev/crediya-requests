@@ -1,6 +1,6 @@
 package co.com.crediya.config;
 
-import co.com.crediya.model.ClientRepository;
+import co.com.crediya.model.clientrest.gateways.ClientRepository;
 import co.com.crediya.model.loanapplication.gateways.LoanApplicationRepository;
 import co.com.crediya.model.loantype.gateways.LoanTypeRepository;
 import co.com.crediya.model.status.gateways.StatusRepository;

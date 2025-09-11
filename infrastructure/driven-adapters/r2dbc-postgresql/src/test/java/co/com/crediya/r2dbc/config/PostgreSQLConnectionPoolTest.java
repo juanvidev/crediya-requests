@@ -24,7 +24,7 @@ class PostgreSQLConnectionPoolTest {
         MockitoAnnotations.openMocks(this);
 
         when(properties.host()).thenReturn("localhost");
-        when(properties.port()).thenReturn(49153);
+        when(properties.port()).thenReturn(5434);
         when(properties.database()).thenReturn("postgres");
         when(properties.schema()).thenReturn("public");
         when(properties.username()).thenReturn("postgres");

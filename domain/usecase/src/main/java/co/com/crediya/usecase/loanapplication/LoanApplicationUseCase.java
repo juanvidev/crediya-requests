@@ -1,6 +1,6 @@
 package co.com.crediya.usecase.loanapplication;
 
-import co.com.crediya.model.ClientRepository;
+import co.com.crediya.model.clientrest.gateways.ClientRepository;
 import co.com.crediya.model.loanapplication.LoanApplication;
 import co.com.crediya.model.loanapplication.gateways.LoanApplicationRepository;
 import co.com.crediya.model.loantype.gateways.LoanTypeRepository;
@@ -21,10 +21,9 @@ public class LoanApplicationUseCase {
         return clientRepository.existsByEmailAndDocument(
                         loanApplication.getEmail(),
                         loanApplication.getDocumentId())
-                .flatMap(exists -> {
-                    if (!exists) {
-                        return Mono
-                                .error(new BusinessException("BSS_03", "No client found with the provided email and document."));
+                .flatMap(client -> {
+                    if (client == null) {
+                        return Mono.error(new BusinessException("BSS_03", "Client does not exist"));
                     }
                     return Mono.just(loanApplication);
                 })

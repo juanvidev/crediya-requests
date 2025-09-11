@@ -14,7 +14,7 @@ spring:
 adapters:
   r2dbc:
     host: "localhost"
-    port: 49153
+    port: 5434
     database: "postgres"
     schema: "public"
     username: "postgres"
