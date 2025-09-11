@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class BussinessResponseException {
-    private String errorCode;
+    private Boolean success = false;
     private String message;
     private LocalDateTime timestamp;
+    private String errorCode;
 }

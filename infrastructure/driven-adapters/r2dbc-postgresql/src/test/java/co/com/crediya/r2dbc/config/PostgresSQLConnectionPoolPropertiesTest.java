@@ -13,7 +13,7 @@ class PostgresSQLConnectionPoolPropertiesTest {
             .withUserConfiguration(TestConfig.class)
             .withPropertyValues(
                     "adapters.r2dbc.host=localhost",
-                    "adapters.r2dbc.port=49152",
+                    "adapters.r2dbc.port=5434",
                     "adapters.r2dbc.database=postgres",
                     "adapters.r2dbc.schema=public",
                     "adapters.r2dbc.username=postgres",
@@ -27,7 +27,7 @@ class PostgresSQLConnectionPoolPropertiesTest {
         contextRunner.run(context -> {
             PostgresqlConnectionProperties props = context.getBean(PostgresqlConnectionProperties.class);
             assertThat(props.host()).isEqualTo("localhost");
-            assertThat(props.port()).isEqualTo(49152);
+            assertThat(props.port()).isEqualTo(5434);
             assertThat(props.database()).isEqualTo("postgres");
             assertThat(props.schema()).isEqualTo("public");
             assertThat(props.username()).isEqualTo("postgres");

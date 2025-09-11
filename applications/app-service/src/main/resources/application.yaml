@@ -2,7 +2,7 @@ server:
   port: 8080
 spring:
   application:
-    name: "CrediYaRequests"
+    name: "CrediyaApplications"
   devtools:
     add-properties: false
   h2:
@@ -14,7 +14,7 @@ spring:
 adapters:
   r2dbc:
     host: "localhost"
-    port: 49153
+    port: 5434
     database: "postgres"
     schema: "public"
     username: "postgres"
@@ -28,11 +28,38 @@ management:
     health:
       probes:
         enabled: true
+  health:
+    circuitbreakers:
+      enabled: true
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
-
 springdoc:
   api-docs:
-    path: /v3/api-docs
+    path: "/v3/api-docs"
   swagger-ui:
-    path: /swagger-doc
+    path: "/swagger-doc"
+adapter:
+  restconsumer:
+    timeout: 150000
+    url: "http://localhost:8081/api/v1"
+resilience4j:
+  circuitbreaker:
+    instances:
+      testGet:
+        registerHealthIndicator: true
+        failureRateThreshold: 50
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: "2s"
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 10
+        waitDurationInOpenState: "10s"
+      testPost:
+        registerHealthIndicator: true
+        failureRateThreshold: 50
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: "2s"
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 10
+        waitDurationInOpenState: "10s"

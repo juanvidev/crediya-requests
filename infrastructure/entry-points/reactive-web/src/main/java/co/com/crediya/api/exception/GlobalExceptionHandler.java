@@ -23,12 +23,13 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
         if(ex instanceof BusinessException businessException){
 
             BussinessResponseException responseError = new BussinessResponseException(
-                businessException.getErrorCode(),
+                businessException.getSuccess(),
                 businessException.getMessage(),
-                businessException.getTimestamp()
+                businessException.getTimestamp(),
+                businessException.getErrorCode()
             );
 
-            exchange.getResponse().setStatusCode(HttpStatusCode.valueOf(400));
+            exchange.getResponse().setStatusCode(HttpStatusCode.valueOf(businessException.getStatusCode()));
             exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
             return exchange.getResponse().writeWith(
@@ -39,9 +40,10 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
 
         if(ex instanceof ConstraintViolationException constraintViolationException){
             CustomResponseException responseError = new CustomResponseException(
-                    constraintViolationException.getErrorCode(),
+                    constraintViolationException.getSuccess(),
                     constraintViolationException.getMessage(),
                     constraintViolationException.getTimestamp(),
+                    constraintViolationException.getErrorCode(),
                     constraintViolationException.getErrors()
             );
 

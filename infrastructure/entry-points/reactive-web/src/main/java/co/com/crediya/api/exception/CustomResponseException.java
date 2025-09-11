@@ -11,9 +11,10 @@ import java.util.List;
 @Setter
 @Builder
 public class CustomResponseException {
-    private String errorCode;
+    private Boolean success;
     private String message;
     private LocalDateTime timestamp;
+    private String errorCode;
     private List<String> errors;
 
 }

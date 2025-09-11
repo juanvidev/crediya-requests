@@ -7,9 +7,9 @@ import java.util.List;
 public class UnexpectedErrorException extends CustomBaseException {
     public UnexpectedErrorException(Throwable ex) {
         super(
-            "UNEXPECTED_ERROR",
-            ex.getMessage(),
             500,
+            ex.getMessage(),
+            "UNEXPECTED_ERROR",
             List.of()
         );
 

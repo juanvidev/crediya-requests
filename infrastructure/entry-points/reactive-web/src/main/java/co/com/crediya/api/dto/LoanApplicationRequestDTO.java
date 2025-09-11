@@ -23,6 +23,11 @@ public record LoanApplicationRequestDTO (
     @Schema(description = "Email of the applicant", example = "test@test.com")
     String email,
 
+    @NotBlank(message = "Document ID is required")
+    @Pattern(regexp = "\\d{10}", message = "Document ID must be exactly")
+    @Schema(description = "Document ID of the applicant", example = "1234567890")
+    String documentId,
+
     @NotBlank(message = "Type of loan name is required")
     @Schema(description = "Type of loan name", example = "Basic")
     String typeLoanName
