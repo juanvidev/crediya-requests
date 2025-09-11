@@ -1,5 +1,6 @@
 package co.com.crediya.consumer;
 
+import co.com.crediya.consumer.exception.ErrorResponse;
 import co.com.crediya.model.clientrest.ClientRest;
 import co.com.crediya.model.clientrest.gateways.ClientRepository;
 import co.com.crediya.model.exception.BusinessException;
@@ -25,8 +26,14 @@ public class RestConsumer implements ClientRepository {
                 .retrieve()
                 .onStatus(
                         status -> status.is4xxClientError() || status.is5xxServerError(),
-                        response -> Mono.error(new BusinessException("BSS_03", "Client service error"))
-                )
+                        response -> response.bodyToMono(ErrorResponse.class)
+                                .defaultIfEmpty(new ErrorResponse())
+                                .flatMap(error -> Mono.error(
+                                        new BusinessException(
+                                                error.getCode() != null ? error.getCode() : "BSS_03",
+                                                error.getMessage() != null ? error.getMessage() : "Client service error"
+                                        )
+                                ))                )
                 .bodyToMono(new ParameterizedTypeReference<ObjectResponse<ClientRest>>() {})
                 .flatMap(response -> {
                     if (response.getData() != null) {
