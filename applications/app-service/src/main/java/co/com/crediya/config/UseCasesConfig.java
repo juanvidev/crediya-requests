@@ -1,6 +1,7 @@
 package co.com.crediya.config;
 
 import co.com.crediya.model.clientrest.gateways.ClientRepository;
+import co.com.crediya.model.clientrest.gateways.TokenGateway;
 import co.com.crediya.model.loanapplication.gateways.LoanApplicationRepository;
 import co.com.crediya.model.loantype.gateways.LoanTypeRepository;
 import co.com.crediya.model.status.gateways.StatusRepository;
@@ -20,8 +21,8 @@ public class UseCasesConfig {
 
 
     @Bean
-    LoanApplicationUseCase loanApplicationUseCase (LoanApplicationRepository loanApplicationRepository, LoanTypeRepository loanTypeRepository, StatusRepository statusRepository, ClientRepository clientRepository) {
+    LoanApplicationUseCase loanApplicationUseCase (LoanApplicationRepository loanApplicationRepository, LoanTypeRepository loanTypeRepository, StatusRepository statusRepository, ClientRepository clientRepository, TokenGateway tokenGateway) {
 
-        return new LoanApplicationUseCase(loanApplicationRepository, loanTypeRepository, statusRepository, clientRepository);
+        return new LoanApplicationUseCase(loanApplicationRepository, loanTypeRepository, statusRepository, clientRepository, tokenGateway);
     }
 }

@@ -13,6 +13,6 @@ public class ErrorResponse {
     private Boolean success;
     private String message;
     private LocalDateTime timestamp;
-    private String code;
+    private String errorCode;
 
 }

@@ -24,6 +24,7 @@ class LoanApplicationMapperTest {
                 new BigDecimal("2500.22"),
                 LocalDate.of(1995, 8, 25),
                 "test@test.com",
+                "1006352211",
                 "Basic"
 
         );

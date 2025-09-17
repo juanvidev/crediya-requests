@@ -38,6 +38,9 @@ springdoc:
     path: "/v3/api-docs"
   swagger-ui:
     path: "/swagger-doc"
+jwt:
+    json-exp-roles: "/roles"
+    secret: "${JWT_SECRET}"
 adapter:
   restconsumer:
     timeout: 150000
