@@ -1,6 +1,7 @@
 package co.com.crediya.usecase;
 
 import co.com.crediya.model.clientrest.gateways.ClientRepository;
+import co.com.crediya.model.clientrest.gateways.TokenGateway;
 import co.com.crediya.model.exception.BusinessException;
 import co.com.crediya.model.loanapplication.LoanApplication;
 import co.com.crediya.model.loanapplication.gateways.LoanApplicationRepository;
@@ -35,6 +36,8 @@ class LoanApplicationUseCaseTest {
     private StatusRepository statusRepositoryMock;
     @Mock
     private ClientRepository clientRepository;
+    @Mock
+    private TokenGateway tokenGateway;
 
     private LoanApplicationUseCase loanApplicationUseCaseMock;
     private LoanApplication loanApplyToTest;
@@ -46,14 +49,14 @@ class LoanApplicationUseCaseTest {
     @BeforeEach
     void setUp() {
         
-        loanApplicationUseCaseMock = new LoanApplicationUseCase(loanApplicationRepository, loanTypeRepositoryMock, statusRepositoryMock, clientRepository);
+        loanApplicationUseCaseMock = new LoanApplicationUseCase(loanApplicationRepository, loanTypeRepositoryMock, statusRepositoryMock, clientRepository, tokenGateway);
 
         loanTypeName = "Basic";
 
         loanApplyToTest = LoanApplication.builder()
                 .id(1)
                 .amount(new BigDecimal("2500.22"))
-                .term(LocalDate.of(2025, 8, 25))
+                .term(25)
                 .email("test@test.com")
                 .typeLoanId(1)
                 .build();

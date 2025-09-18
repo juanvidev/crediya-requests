@@ -21,8 +21,10 @@ public class LoanApplicationEntity {
     @Column("id")
     private Integer id;
     private BigDecimal amount;
-    private LocalDate term;
+    private Integer term;
     private String email;
+    @Column("document_id")
+    private String documentId;
     @Column("id_state")
     private Integer stateId;
     @Column("id_type_loan")

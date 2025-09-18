@@ -22,7 +22,7 @@ class LoanApplicationMapperTest {
     void testToDomain() {
         LoanApplicationRequestDTO dto = new LoanApplicationRequestDTO(
                 new BigDecimal("2500.22"),
-                LocalDate.of(1995, 8, 25),
+                25,
                 "test@test.com",
                 "1006352211",
                 "Basic"
@@ -42,7 +42,7 @@ class LoanApplicationMapperTest {
     void testToResponse() {
         LoanApplication loanApply = LoanApplication.builder()
                 .amount(new BigDecimal("2500.22"))
-                .term(LocalDate.of(2025, 8, 25))
+                .term(25)
                 .email("test@test.com")
                 .typeLoanId(1)
                 .build();

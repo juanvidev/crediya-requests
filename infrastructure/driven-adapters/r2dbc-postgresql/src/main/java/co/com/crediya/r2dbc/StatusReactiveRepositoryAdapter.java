@@ -7,7 +7,10 @@ import co.com.crediya.r2dbc.entity.StatusEntity;
 import co.com.crediya.r2dbc.helper.ReactiveAdapterOperations;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Repository
 public class StatusReactiveRepositoryAdapter extends ReactiveAdapterOperations<
@@ -27,5 +30,11 @@ public class StatusReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     @Override
     public Mono<Status> findByName(String name) {
         return transactionalOperatorGateway.executeOne(() -> super.repository.findByName(name));
+    }
+
+    @Override
+    public Flux<Status> findAllById(List<Integer> ids) {
+        return transactionalOperatorGateway.executeMany(() -> super.repository.findAllById(ids))
+                .map(entity -> mapper.map(entity, Status.class));
     }
 }

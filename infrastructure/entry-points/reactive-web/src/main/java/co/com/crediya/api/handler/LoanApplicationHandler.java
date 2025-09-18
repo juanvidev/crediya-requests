@@ -1,4 +1,4 @@
-package co.com.crediya.api;
+package co.com.crediya.api.handler;
 
 import co.com.crediya.api.dto.LoanApplicationRequestDTO;
 import co.com.crediya.api.mapper.LoanApplicationMapper;
@@ -7,8 +7,6 @@ import co.com.crediya.model.LoggerGateway;
 import co.com.crediya.usecase.loanapplication.LoanApplicationUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -34,4 +32,5 @@ public class LoanApplicationHandler {
                 .doOnSuccess(resp -> logger.info(LOG_PREFIX + " - Response sent with status 201"));
 
     }
+
 }

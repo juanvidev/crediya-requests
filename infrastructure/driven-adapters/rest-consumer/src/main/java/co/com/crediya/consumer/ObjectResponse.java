@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,8 +15,9 @@ import lombok.Setter;
 @Builder(toBuilder = true)
 public class ObjectResponse<T> {
 
-    private String code;
+    private Boolean success;
     private String message;
+    private LocalDate timestamp;
     private T data;
 
 }

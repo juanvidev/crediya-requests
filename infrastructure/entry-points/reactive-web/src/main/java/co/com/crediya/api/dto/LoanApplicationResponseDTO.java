@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 public record LoanApplicationResponseDTO (
         BigDecimal amount,
-        LocalDate term,
+        Integer term,
         String email,
         String typeLoanName
 ) {}

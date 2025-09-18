@@ -13,10 +13,11 @@ public record LoanApplicationRequestDTO (
     @Schema(description = "Amount of the loan", example = "15000.00")
     BigDecimal amount,
 
-    @NotNull(message = "Term date is required")
-    @Future(message = "Term date must be in the future")
-    @Schema(description = "Term of the loan in days", example = "2025-09-21")
-    LocalDate term,
+    @NotNull(message = "Term in months is required")
+    @Min(value = 6, message = "Term must be at least 6 months")
+    @Max(value = 60, message = "Term must be at most 60 months")
+    @Schema(description = "Term of the loan in months", example = "25")
+    Integer term,
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")

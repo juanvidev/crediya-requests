@@ -14,7 +14,6 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.function.Supplier;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -45,7 +44,7 @@ class LoanApplicationReactiveRepositoryAdapterTest {
 
         domain = LoanApplication.builder()
                 .amount(new BigDecimal("2500.22"))
-                .term(LocalDate.of(2025, 8, 25))
+                .term(25)
                 .email("test@test.com")
                 .typeLoanId(1)
                 .build();

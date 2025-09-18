@@ -69,6 +69,7 @@ public class AuthorizationJwt implements WebFluxConfigurer {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers("/api/v1/apply").hasRole("CLIENT")
+                        .pathMatchers("/api/v1/applications").hasRole("ADVISOR")
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

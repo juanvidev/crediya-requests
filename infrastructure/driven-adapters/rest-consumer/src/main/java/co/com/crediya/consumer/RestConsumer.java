@@ -11,9 +11,11 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.rmi.UnexpectedException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -45,5 +47,31 @@ public class RestConsumer implements ClientRepository {
                         return Mono.empty();
                     }
                 });
+    }
+
+    @Override
+    public Flux<ClientRest> findAllByEmail(List<String> emails) {
+        return client
+                .post()
+                .uri("/users/emails")
+                .bodyValue(emails)
+                .retrieve()
+                .onStatus(HttpStatus.UNAUTHORIZED::equals,
+                        resp -> Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED)))
+                .onStatus(HttpStatusCode::is4xxClientError,
+                        resp -> resp.bodyToMono(ErrorResponse.class)
+                                .flatMap(error -> Mono.error(new BusinessException(error.getErrorCode(), error.getMessage(), resp.statusCode().value()))))
+                .onStatus(HttpStatusCode::is5xxServerError,
+                        resp -> resp.bodyToMono(UnexpectedException.class)
+                                .flatMap(error -> Mono.error(new UnexpectedException(error.getMessage()))))
+                .bodyToFlux(new ParameterizedTypeReference<ObjectResponse<List<ClientRest>>>() {})
+                .flatMap(response -> {
+                    if (response.getData() != null) {
+                        return Flux.fromIterable(response.getData());
+                    } else {
+                        return Flux.empty();
+                    }
+                });
+
     }
 }

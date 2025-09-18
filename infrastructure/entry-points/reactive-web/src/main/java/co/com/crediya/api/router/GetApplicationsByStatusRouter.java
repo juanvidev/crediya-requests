@@ -1,6 +1,8 @@
-package co.com.crediya.api;
+package co.com.crediya.api.router;
 
 import co.com.crediya.api.docs.LoanApplicationDocs;
+import co.com.crediya.api.handler.GetApplicationsByStatusHandler;
+import co.com.crediya.api.handler.LoanApplicationHandler;
 import co.com.crediya.api.util.Routes;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.core.annotations.RouterOperation;
@@ -12,11 +14,8 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import static org.springframework.web.reactive.function.server.RouterFunctions.route;
-
 @Configuration
-@Tag(name = "LoanApplications", description = "Loan Applications Management")
-public class LoanApplicationRouterRest {
+public class GetApplicationsByStatusRouter {
 
     @Bean
     @RouterOperations({
@@ -27,10 +26,10 @@ public class LoanApplicationRouterRest {
                     beanMethod = "createLoanApplication"
             )
     })
-    public RouterFunction<ServerResponse> routerFunction(LoanApplicationHandler loanApplicationHandler) {
+    public RouterFunction<ServerResponse> routerGetApplicationsByStatusFunction(GetApplicationsByStatusHandler getApplicationsByStatusHandler) {
         return RouterFunctions
                 .route()
-                .path(Routes.LOAN_APPLICATION,builder -> builder
-                        .POST("", loanApplicationHandler::saveApplication))
+                .path("/api/v1/applications",builder -> builder
+                    .GET("", getApplicationsByStatusHandler::listenGetApplicationsByStatusHandler))
                 .build();
     }}
